@@ -1,10 +1,43 @@
 
 var startBtn = document.querySelector('#start');
 var score = 0;
-var time = document.querySelector('countdown');
+var timeEl = document.getElementById('time');
+var userScore = document.getElementById('user-score');
+var pastScore = document.getElementById('past-scores');
 
+function countdown () {
+var counter = 21;
+
+//timer 
+var interval = setInterval(function () {
+    counter--;
+    // timeEl.textContent = [counter];
+    console.log(counter);
+    timeEl.textContent = counter;
+    if ( counter === 0){ 
+    clearInterval(interval);
+    }
+},1000);
+}
+
+// show old scores
+function showScores () {
+    var oldScore = localStorage.getItem('score');
+    var oldInitials = localStorage.getItem('initials');
+    if(score===null || oldInitials===null){
+        return;
+    }
+    
+    pastScore.textContent = oldInitials + ':' + oldScore;
+}
+
+showScores();
 
 function takeQuiz() {
+
+    var userInitials = window.prompt('type your initials!');
+    console.log(userInitials);
+
     var questions = [
         {q: 'the DOM is built into the javaScript language', a: false},
         {q: 'an alert is a type of data', a: false},
@@ -27,28 +60,17 @@ function takeQuiz() {
         alert('wrong!');
     }
     }
-    
-    alert('you got ' + score + '/' + questions.length);
+
+    // alert('you got ' + score + '/' + questions.length);
+
+    userScore.textContent = score + '/' + questions.length;
+    localStorage.setItem('score', score);
+    localStorage.setItem('initials', userInitials);
+    showScores();
 }
 
-function countdown (){
+    startBtn.addEventListener('click', function(event) {
+        takeQuiz(); countdown();
+    });
 
-    var timeLeft = 60;
-
-    var timeInterval = setInterval(function() {
-        if (timeLeft > 1) {
-            time.textContent = timeLeft;
-        } else if (timeLeft === 0) {
-            time.textContent = 'you ran out of time!';
-            timeLeft--;
-        }
-
-    },1000);
-
-}
-
-startBtn.addEventListener('click', function(event) {
-    takeQuiz();
-});
-
-startBtn.onclick = countdown; 
+    // startBtn.onclick = countdown;
